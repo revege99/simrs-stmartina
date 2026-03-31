@@ -6860,17 +6860,36 @@ private void KabupatenMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:eve
     }//GEN-LAST:event_ChkRMItemStateChanged
 
     private void MnCekKepesertaanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnCekKepesertaanActionPerformed
-        if(!TNoPeserta.getText().equals("")){
-            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            BPJSPeserta form=new BPJSPeserta(null, true);
-            form.tampil(TNoPeserta.getText());
-            form.setSize(640,internalFrame1.getHeight()-20);
-            form.setLocationRelativeTo(internalFrame1);
-            form.setVisible(true);
-            this.setCursor(Cursor.getDefaultCursor());
-        }else{
-            JOptionPane.showMessageDialog(null,"Maaf, Nomor kepesertaan kosong...!!!");
+//        if(!TNoPeserta.getText().equals("")){
+//            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+//            BPJSPeserta form=new BPJSPeserta(null, true);
+//            form.tampil(TNoPeserta.getText());
+//            form.setSize(640,internalFrame1.getHeight()-20);
+//            form.setLocationRelativeTo(internalFrame1);
+//            form.setVisible(true);
+//            this.setCursor(Cursor.getDefaultCursor());
+//        }else{
+//            JOptionPane.showMessageDialog(null,"Maaf, Nomor kepesertaan kosong...!!!");
+//        }
+
+        if (!TNoPeserta.getText().equals("")) {
+            String noPeserta = TNoPeserta.getText().trim();
+
+            if (!noPeserta.matches("\\d+")) {
+                JOptionPane.showMessageDialog(null, "Maaf, Nomor kepesertaan harus berupa angka...!!!");
+            } else {
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                BPJSPeserta form = new BPJSPeserta(null, true);
+                form.tampil(noPeserta);
+                form.setSize(640, internalFrame1.getHeight() - 20);
+                form.setLocationRelativeTo(internalFrame1);
+                form.setVisible(true);
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Maaf, Nomor kepesertaan kosong...!!!");
         }
+
             
     }//GEN-LAST:event_MnCekKepesertaanActionPerformed
 
@@ -8213,31 +8232,75 @@ private void KabupatenMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:eve
     }//GEN-LAST:event_BtnSeek11ActionPerformed
 
     private void MnCekKepesertaan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnCekKepesertaan1ActionPerformed
-        if(!TNoPeserta.getText().equals("")){
-            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            PCarePeserta form=new PCarePeserta(null, true);
-            form.tampil(TNoPeserta.getText());
-            form.setSize(640,internalFrame1.getHeight()-20);
-            form.setLocationRelativeTo(internalFrame1);
-            form.setVisible(true);
-            this.setCursor(Cursor.getDefaultCursor());
-        }else{
-            JOptionPane.showMessageDialog(null,"Maaf, Nomor kepesertaan kosong...!!!");
-        }
+//        if(!TNoPeserta.getText().equals("")){
+//            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+//            PCarePeserta form=new PCarePeserta(null, true);
+//            form.tampil(TNoPeserta.getText());
+//            form.setSize(640,internalFrame1.getHeight()-20);
+//            form.setLocationRelativeTo(internalFrame1);
+//            form.setVisible(true);
+//            this.setCursor(Cursor.getDefaultCursor());
+//        }else{
+//            JOptionPane.showMessageDialog(null,"Maaf, Nomor kepesertaan kosong...!!!");
+//        }
+            String noPeserta = TNoPeserta.getText().trim();
+
+            if (noPeserta.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Maaf, Nomor kepesertaan kosong...!!!");
+            } else if (!noPeserta.matches("\\d+")) {
+                JOptionPane.showMessageDialog(null, "Maaf, Nomor kepesertaan harus berupa angka saja...!!!");
+            } else if (noPeserta.length() < 13) {
+                JOptionPane.showMessageDialog(null, "Maaf, Nomor kepesertaan kurang dari 13 digit...!!!");
+            } else if (noPeserta.length() > 13) {
+                JOptionPane.showMessageDialog(null, "Maaf, Nomor kepesertaan lebih dari 13 digit...!!!");
+            } else {
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                PCarePeserta form = new PCarePeserta(null, true);
+                form.tampil(noPeserta);
+                form.setSize(640, internalFrame1.getHeight() - 20);
+                form.setLocationRelativeTo(internalFrame1);
+                form.setVisible(true);
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+
+
     }//GEN-LAST:event_MnCekKepesertaan1ActionPerformed
 
     private void MnCekNIK1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnCekNIK1ActionPerformed
-        if(!TKtp.getText().equals("")){
-            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            PCareNIK form=new PCareNIK(null, true);
-            form.tampil(TKtp.getText());
-            form.setSize(640,internalFrame1.getHeight()-20);
-            form.setLocationRelativeTo(internalFrame1);
-            form.setVisible(true);
-            this.setCursor(Cursor.getDefaultCursor());
-        }else{
-            JOptionPane.showMessageDialog(null,"Maaf, NIK KTP kosong...!!!");
-        }
+//        if(!TKtp.getText().equals("")){
+//            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+//            PCareNIK form=new PCareNIK(null, true);
+//            form.tampil(TKtp.getText());
+//            form.setSize(640,internalFrame1.getHeight()-20);
+//            form.setLocationRelativeTo(internalFrame1);
+//            form.setVisible(true);
+//            this.setCursor(Cursor.getDefaultCursor());
+//        }else{
+//            JOptionPane.showMessageDialog(null,"Maaf, NIK KTP kosong...!!!");
+//        }
+            if (!TKtp.getText().equals("")) {
+                String nik = TKtp.getText().trim();
+
+                if (!nik.matches("\\d+")) {
+                    JOptionPane.showMessageDialog(null, "Maaf, NIK KTP harus berupa angka saja...!!!");
+                } else if (nik.length() < 16) {
+                    JOptionPane.showMessageDialog(null, "Maaf, NIK KTP kurang dari 16 digit...!!!");
+                } else if (nik.length() > 16) {
+                    JOptionPane.showMessageDialog(null, "Maaf, NIK KTP lebih dari 16 digit...!!!");
+                } else {
+                    this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                    PCareNIK form = new PCareNIK(null, true);
+                    form.tampil(nik);
+                    form.setSize(640, internalFrame1.getHeight() - 20);
+                    form.setLocationRelativeTo(internalFrame1);
+                    form.setVisible(true);
+                    this.setCursor(Cursor.getDefaultCursor());
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Maaf, NIK KTP kosong...!!!");
+            }
+
+
     }//GEN-LAST:event_MnCekNIK1ActionPerformed
 
     private void tbPasienKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbPasienKeyReleased

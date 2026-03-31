@@ -46,6 +46,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+
 
 /**
  *
@@ -63,12 +68,23 @@ public final class ICareRiwayatPerawatanFKTP extends javax.swing.JDialog {
     private JsonNode response;
     private final JFXPanel jfxPanel = new JFXPanel();
     private WebEngine engine;
- 
+ private Connection koneksi=koneksiDB.condb();
     private final JLabel lblStatus = new JLabel();
 
     private final JTextField txtURL = new JTextField();
     private final JProgressBar progressBar = new JProgressBar();
-        
+    private PreparedStatement psotomatis, psotomatis2, pskasir, pscaripiutang, psrekening, psUserICare,psPassICare;
+    private ResultSet rsUserICare;
+    private ResultSet rsPassICare;
+
+    private String userICareAktif = "";
+    private String passIcareAktif = "";
+
+    
+
+
+
+
     /** Creates new form DlgKamar
      * @param parent
      * @param modal */
@@ -84,12 +100,16 @@ public final class ICareRiwayatPerawatanFKTP extends javax.swing.JDialog {
         NoKartu.setDocument(new batasInput((int)100).getKata(NoKartu));
         KdDPJPLayanan.setDocument(new batasInput((int)100).getKata(KdDPJPLayanan));
         
-        try {
-            otorisasi=koneksiDB.USERPCARE()+":"+koneksiDB.PASSPCARE()+":095";
-            link=koneksiDB.URLAPIICARE();
-        } catch (Exception e) {
-            System.out.println("E : "+e);
-        }
+        
+        
+//        try {
+//            otorisasi=koneksiDB.USERICARE()+":"+koneksiDB.PASSICARE()+":095";
+//            link=koneksiDB.URLAPIICARE();
+//        } catch (Exception e) {
+//            System.out.println("E : "+e);
+//        }
+        
+        
     }
     
     private void initComponents2() {           
@@ -284,9 +304,110 @@ public final class ICareRiwayatPerawatanFKTP extends javax.swing.JDialog {
     private widget.Label jLabel17;
     private widget.panelisi panelGlass6;
     // End of variables declaration//GEN-END:variables
+        private String getUserICare(String kdDokter) {
+            String userICare = "";
+            System.out.println("DEBUG getUserICare() | kdDokter = [" + kdDokter + "]");
+
+            try {
+                psUserICare = koneksi.prepareStatement(
+                    "SELECT user_key FROM dokter WHERE kd_dokter = ?"
+                );
+                psUserICare.setString(1, kdDokter);
+
+                System.out.println("DEBUG SQL siap dieksekusi");
+
+                rsUserICare = psUserICare.executeQuery();
+
+                if (rsUserICare.next()) {
+                    userICare = rsUserICare.getString("user_key");
+                    System.out.println("DEBUG USERICARE ditemukan = [" + userICare + "]");
+                } else {
+                    System.out.println("DEBUG USERICARE TIDAK ditemukan untuk kdDokter = " + kdDokter);
+                }
+
+            } catch (Exception e) {
+                System.out.println("ERROR ambil USERICARE: " + e.getMessage());
+            } finally {
+                try {
+                    if (rsUserICare != null) rsUserICare.close();
+                    if (psUserICare != null) psUserICare.close();
+                } catch (Exception e) {
+                    System.out.println("ERROR close USERICARE: " + e.getMessage());
+                }
+            }
+
+            System.out.println("DEBUG RETURN getUserICare() = [" + userICare + "]");
+            return userICare;
+        }
+        
+        
+        
+        private String getPassICare(String kdDokter) {
+            String passICare = "";
+            System.out.println("DEBUG getPassICare() | kdDokter = [" + kdDokter + "]");
+
+            try {
+                psPassICare = koneksi.prepareStatement(
+                    "SELECT pass_icare FROM dokter WHERE kd_dokter = ?"
+                );
+                psPassICare.setString(1, kdDokter);
+
+                System.out.println("DEBUG SQL siap dieksekusi");
+
+                rsPassICare = psPassICare.executeQuery();
+
+                if (rsPassICare.next()) {
+                    passICare = rsPassICare.getString("pass_icare");
+                    System.out.println("DEBUG passICare ditemukan = [" + passICare + "]");
+                } else {
+                    System.out.println("DEBUG passICare TIDAK ditemukan untuk kdDokter = " + kdDokter);
+                }
+
+            } catch (Exception e) {
+                System.out.println("ERROR ambil passICare: " + e.getMessage());
+            } finally {
+                try {
+                    if (rsPassICare != null) rsPassICare.close();
+                    if (psPassICare != null) psPassICare.close();
+                } catch (Exception e) {
+                    System.out.println("ERROR close passICare: " + e.getMessage());
+                }
+            }
+
+            System.out.println("DEBUG RETURN getPassICare() = [" + passICare + "]");
+            return passICare;
+        }
+
 
     public void tampil() {
+        
         try {
+            String kdDokter = KdDPJPLayanan.getText().trim();
+
+                if (kdDokter.isEmpty()) {
+                    throw new Exception("KD DPJP kosong");
+                }
+
+                userICareAktif = getUserICare(kdDokter);
+                if (userICareAktif.isEmpty()) {
+                    throw new Exception("User iCare belum dimapping untuk dokter " + kdDokter);
+                }
+                
+                passIcareAktif = getPassICare(kdDokter);
+                if (passIcareAktif.isEmpty()) {
+                    throw new Exception("User iCare belum dimapping untuk dokter " + kdDokter);
+                }
+
+                otorisasi = userICareAktif + ":" 
+                          + passIcareAktif 
+                          + ":095";
+
+                link = koneksiDB.URLAPIICARE();
+                if (link == null || link.isEmpty()) {
+                    throw new Exception("URL API iCare kosong");
+                }
+            
+            
             headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.add("Content-Type","application/json");
@@ -296,12 +417,17 @@ public final class ICareRiwayatPerawatanFKTP extends javax.swing.JDialog {
             headers.add("X-authorization","Basic "+Base64.encodeBase64String(otorisasi.getBytes()));
             headers.add("x-signature",api.getHmac(utc));
             headers.add("user_key",koneksiDB.USERKEYAPIICARE());
-            //System.out.println("Content-Type:application/json");
-            //System.out.println("x-signature:"+api.getHmac(utc));
-            //System.out.println("x-timestamp:"+utc);
-            //System.out.println("x-cons-id:"+koneksiDB.CONSIDAPIICARE());
-            //System.out.println("user_key:"+koneksiDB.USERKEYAPIICARE());
-            //System.out.println("X-authorization:"+"Basic "+Base64.encodeBase64String(otorisasi.getBytes()));
+            System.out.println("Content-Type:application/json");
+            System.out.println("x-signature:"+api.getHmac(utc));
+            System.out.println("x-timestamp:"+utc);
+            System.out.println("x-cons-id:"+koneksiDB.CONSIDAPIICARE());
+            System.out.println("user_key:"+koneksiDB.USERKEYAPIICARE());
+            System.out.println("X-authorization:"+"Basic "+Base64.encodeBase64String(otorisasi.getBytes()));
+            
+            System.out.println("KD DOKTER FIELD : " + KdDPJPLayanan.getText());
+            System.out.println("KD DOKTER VAR   : " + kdDokterAktif);
+
+            
             requestJson="{"+
                             "\"param\": \""+NoKartu.getText().trim()+"\","+
                             "\"kodedokter\": "+KdDPJPLayanan.getText().trim()+""+
@@ -332,9 +458,12 @@ public final class ICareRiwayatPerawatanFKTP extends javax.swing.JDialog {
         }
     } 
     
-    public void setPasien(String param,String kodedokter){
+        private String kdDokterAktif = "";
+
+    public void setPasien(String param, String kodedokter){
         NoKartu.setText(param);
         KdDPJPLayanan.setText(kodedokter);
+        kdDokterAktif = kodedokter; // ⬅ SIMPAN
     }
     
     private void createScene() {        

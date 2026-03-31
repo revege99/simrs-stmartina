@@ -560,22 +560,54 @@ private void KdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TKdKey
     }//GEN-LAST:event_BtnKeluarKeyPressed
 
 private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
-    if(TabRawat.getSelectedIndex()==0){
+//    if(TabRawat.getSelectedIndex()==0){
+//        if(tbDokter.getSelectedRow()!= -1){
+//            try {
+//                bodyWithDeleteRequest();
+//            }catch (Exception ex) {
+//                System.out.println("Notifikasi Bridging : "+ex);                    
+//            }            
+//        }else{            
+//            JOptionPane.showMessageDialog(null,"Maaf, silahkan pilih data peserta...!!!!");
+//            TCari.requestFocus();
+//        }
+//    }else if(TabRawat.getSelectedIndex()==1){
+//        JOptionPane.showMessageDialog(null,"Hanya bisa dilakukan hapus di Data Peserta..!!!");
+//        TabRawat.setSelectedIndex(0);
+//        TCari.requestFocus();
+//    }     
+
+
+//modif
+if(TabRawat.getSelectedIndex()==0){
         if(tbDokter.getSelectedRow()!= -1){
-            try {
-                bodyWithDeleteRequest();
-            }catch (Exception ex) {
-                System.out.println("Notifikasi Bridging : "+ex);                    
-            }            
-        }else{            
+            int jawab = JOptionPane.showConfirmDialog(
+                this,
+                "Apakah Anda yakin ingin menghapus data ini?",
+                "Konfirmasi Hapus",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+
+            if (jawab == JOptionPane.YES_OPTION) {
+                try {
+                    bodyWithDeleteRequest(); // lanjut hapus
+                } catch (Exception ex) {
+                    System.out.println("Notifikasi Bridging : " + ex);
+                }
+            } else {
+                // batal hapus, tidak lakukan apa-apa
+            }
+        } else {            
             JOptionPane.showMessageDialog(null,"Maaf, silahkan pilih data peserta...!!!!");
             TCari.requestFocus();
         }
-    }else if(TabRawat.getSelectedIndex()==1){
+    } else if(TabRawat.getSelectedIndex()==1){
         JOptionPane.showMessageDialog(null,"Hanya bisa dilakukan hapus di Data Peserta..!!!");
         TabRawat.setSelectedIndex(0);
         TCari.requestFocus();
-    }         
+    }
+//tutup modif
 }//GEN-LAST:event_BtnHapusActionPerformed
 
 private void BtnHapusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnHapusKeyPressed

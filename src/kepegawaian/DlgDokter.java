@@ -65,7 +65,7 @@ public class DlgDokter extends javax.swing.JDialog {
         setSize(885,674);
 
         tabMode=new DefaultTableModel(null,new Object[]{
-                "Kode Dokter","Nama Dokter","J.K.","Tmp.Lahir","Tgl.Lahir","G.D.","Agama","Alamat Tinggal","No.HP/Telp","Email","Stts.Nikah","Spesialis","Alumni","No.Ijin Praktek"
+                "Kode Dokter","Nama Dokter","J.K.","Tmp.Lahir","Tgl.Lahir","G.D.","Agama","Alamat Tinggal","No.HP/Telp","Email","Stts.Nikah","Spesialis","Alumni","No.Ijin Praktek","User ICare","Password Icare"
             }){
             @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
         };
@@ -268,6 +268,10 @@ public class DlgDokter extends javax.swing.JDialog {
         BtnCariPegawai = new widget.Button();
         Email = new widget.TextBox();
         jLabel23 = new widget.Label();
+        user_icare = new widget.TextBox();
+        jLabel24 = new widget.Label();
+        password_icare = new widget.TextBox();
+        jLabel25 = new widget.Label();
         ChkInput = new widget.CekBox();
 
         Popup.setName("Popup"); // NOI18N
@@ -830,6 +834,46 @@ public class DlgDokter extends javax.swing.JDialog {
         FormInput.add(jLabel23);
         jLabel23.setBounds(612, 72, 55, 23);
 
+        user_icare.setHighlighter(null);
+        user_icare.setName("user_icare"); // NOI18N
+        user_icare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                user_icareActionPerformed(evt);
+            }
+        });
+        user_icare.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                user_icareKeyPressed(evt);
+            }
+        });
+        FormInput.add(user_icare);
+        user_icare.setBounds(890, 40, 193, 23);
+
+        jLabel24.setText("User Icare");
+        jLabel24.setName("jLabel24"); // NOI18N
+        FormInput.add(jLabel24);
+        jLabel24.setBounds(890, 13, 55, 30);
+
+        password_icare.setHighlighter(null);
+        password_icare.setName("password_icare"); // NOI18N
+        password_icare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                password_icareActionPerformed(evt);
+            }
+        });
+        password_icare.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                password_icareKeyPressed(evt);
+            }
+        });
+        FormInput.add(password_icare);
+        password_icare.setBounds(890, 100, 193, 23);
+
+        jLabel25.setText("Password");
+        jLabel25.setName("jLabel25"); // NOI18N
+        FormInput.add(jLabel25);
+        jLabel25.setBounds(890, 70, 55, 30);
+
         PanelInput.add(FormInput, java.awt.BorderLayout.CENTER);
 
         ChkInput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/143.png"))); // NOI18N
@@ -919,6 +963,10 @@ public class DlgDokter extends javax.swing.JDialog {
             Valid.textKosong(TNm,"nama dokter");
         }else if(TSpesialis.getText().trim().equals("")||KdSps.getText().trim().equals("")){
             Valid.textKosong(KdSps,"spesialis");
+        }else if(user_icare.getText().trim().equals("")){
+            Valid.textKosong(user_icare,"user icare dokter");
+        }else if(password_icare.getText().trim().equals("")){
+            Valid.textKosong(password_icare,"password icare dokter");
         }else{
             try { 
                 Sequel.AutoComitFalse();
@@ -938,10 +986,20 @@ public class DlgDokter extends javax.swing.JDialog {
                     "'<1','-','T','-','AKTIF','0','0','0','1900-01-01','0','0','pages/pegawai/photo/','-'"
                 );        
                 Sequel.menyimpan2(
-                    "dokter","'"+TKd.getText()+"','"+TNm.getText()+"','"+CmbJk.getSelectedItem().toString().replaceAll("LAKI-LAKI","L").replaceAll("PEREMPUAN","P").trim()+"','"+
-                    TTmp.getText()+"','"+Valid.SetTgl(DTPLahir.getSelectedItem()+"")+"','"+CMbGd.getSelectedItem()+"','"+cmbAgama.getSelectedItem()+"','"+TAlmt.getText()+"','"+
-                    TTlp.getText()+"','"+Email.getText()+"','"+CmbStts.getSelectedItem()+"','"+KdSps.getText()+"','"+TAlumni.getText()+"','"+TNoi.getText()+"','1'","Kode Dokter"
+                    "dokter (kd_dokter, nm_dokter, jk, tmp_lahir, tgl_lahir, gol_drh, agama, almt_tgl, no_telp, email, stts_nikah, kd_sps, alumni, no_ijn_praktek, status, user_key, pass_icare)",
+                    "'"+TKd.getText()+"','"+TNm.getText()+"','"+
+                    CmbJk.getSelectedItem().toString()
+                        .replaceAll("LAKI-LAKI","L")
+                        .replaceAll("PEREMPUAN","P").trim()+"','"+
+                    TTmp.getText()+"','"+Valid.SetTgl(DTPLahir.getSelectedItem()+"")+"','"+
+                    CMbGd.getSelectedItem()+"','"+cmbAgama.getSelectedItem()+"','"+
+                    TAlmt.getText()+"','"+TTlp.getText()+"','"+Email.getText()+"','"+
+                    CmbStts.getSelectedItem()+"','"+KdSps.getText()+"','"+
+                    TAlumni.getText()+"','"+TNoi.getText()+"','1','"+
+                    user_icare.getText()+"','"+password_icare.getText()+"'",
+                    "Kode Dokter"
                 );
+
                 Sequel.Commit();
                 Sequel.AutoComitTrue();
                 tampil();
@@ -1213,6 +1271,22 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         // TODO add your handling code here:
     }//GEN-LAST:event_EmailKeyPressed
 
+    private void user_icareKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_user_icareKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_user_icareKeyPressed
+
+    private void user_icareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_user_icareActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_user_icareActionPerformed
+
+    private void password_icareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_icareActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_password_icareActionPerformed
+
+    private void password_icareKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_password_icareKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_password_icareKeyPressed
+
     /**
     * @param args the command line arguments
     */
@@ -1280,6 +1354,8 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private widget.Label jLabel21;
     private widget.Label jLabel22;
     private widget.Label jLabel23;
+    private widget.Label jLabel24;
+    private widget.Label jLabel25;
     private widget.Label jLabel3;
     private widget.Label jLabel4;
     private widget.Label jLabel6;
@@ -1289,7 +1365,9 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JSeparator jSeparator4;
     private widget.panelisi panelGlass6;
     private widget.panelisi panelGlass8;
+    private widget.TextBox password_icare;
     private widget.Table tbDokter;
+    private widget.TextBox user_icare;
     // End of variables declaration//GEN-END:variables
 
     private void tampil() {
@@ -1298,7 +1376,7 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             stat=koneksi.prepareStatement(
                    "select dokter.kd_dokter,dokter.nm_dokter,dokter.jk,dokter.tmp_lahir, "+
                    "dokter.tgl_lahir,dokter.gol_drh,dokter.agama,dokter.almt_tgl,dokter.no_telp,dokter.email, "+
-                   "dokter.stts_nikah,spesialis.nm_sps,dokter.alumni,dokter.no_ijn_praktek "+
+                   "dokter.stts_nikah,spesialis.nm_sps,dokter.alumni,dokter.no_ijn_praktek,dokter.user_key,dokter.pass_icare "+
                    "from dokter inner join spesialis on dokter.kd_sps=spesialis.kd_sps "+
                    "where dokter.status='1' and dokter.jk like ? and dokter.gol_drh like ? and dokter.stts_nikah like ? "+
                    (!TCari.getText().trim().equals("")?"and (dokter.kd_dokter like ? or dokter.nm_dokter like ? or "+
@@ -1321,12 +1399,14 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     stat.setString(12,"%"+TCari.getText().trim()+"%");
                     stat.setString(13,"%"+TCari.getText().trim()+"%");
                     stat.setString(14,"%"+TCari.getText().trim()+"%");
+                    
                 }
                 rs=stat.executeQuery();
                 while(rs.next()){
                     tabMode.addRow(new Object[]{
                         rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),
-                        rs.getString(8),rs.getString(9),rs.getString(10),rs.getString(11),rs.getString(12),rs.getString(13),rs.getString(14)
+                        rs.getString(8),rs.getString(9),rs.getString(10),rs.getString(11),rs.getString(12),rs.getString(13),rs.getString(14),rs.getString(15), // user_key  ✅
+                        rs.getString(16)
                     });
                 }
             }catch(Exception e){
@@ -1364,6 +1444,8 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         DTPLahir.setDate(new Date());
         TKd.requestFocus();
         Valid.autoNomer(" dokter ","D",7,TKd);
+        user_icare.setText("");
+        password_icare.setText("");
     }
 
     private void getData() {
@@ -1382,7 +1464,8 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             Sequel.cariIsi("select spesialis.kd_sps from spesialis where spesialis.nm_sps='"+tbDokter.getValueAt(row,11).toString()+"'", KdSps);
             TAlumni.setText(tbDokter.getValueAt(row,12).toString());
             TNoi.setText(tbDokter.getValueAt(row,13).toString());
-            
+            user_icare.setText(tbDokter.getValueAt(row,14).toString());
+            password_icare.setText(tbDokter.getValueAt(row,15).toString());
             switch (tbDokter.getValueAt(row,2).toString()) {
                 case "L":
                     CmbJk.setSelectedItem("LAKI-LAKI");

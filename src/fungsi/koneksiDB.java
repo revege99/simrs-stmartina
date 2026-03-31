@@ -149,6 +149,52 @@ public class koneksiDB {
         return var;
     }
     
+    
+    public static String HOSTCALL() {
+        try (FileInputStream fis = new FileInputStream("setting/database.xml")) {
+            prop.loadFromXML(fis);
+            var = EnkripsiAES.decrypt(prop.getProperty("HOSTCALL"));
+        } catch (Exception e) {
+            var = "";
+        }
+        return var;
+    }
+    
+    public static String USERICARE() {
+        try (FileInputStream fis = new FileInputStream("setting/database.xml")) {
+            prop.loadFromXML(fis);
+            var = EnkripsiAES.decrypt(prop.getProperty("USERICARE"));
+        } catch (Exception e) {
+            var = "";
+        }
+        return var;
+    }
+    
+     public static String PASSICARE() {
+        try (FileInputStream fis = new FileInputStream("setting/database.xml")) {
+            prop.loadFromXML(fis);
+            var = EnkripsiAES.decrypt(prop.getProperty("PASSICARE"));
+        } catch (Exception e) {
+            var = "";
+        }
+        return var;
+    }
+    
+    
+
+        public static String FOLDERCALL() {
+            try (FileInputStream fis = new FileInputStream("setting/database.xml")) {
+                prop.loadFromXML(fis);
+                var = prop.getProperty("FOLDERCALL");
+            } catch (Exception e) {
+                var = "";
+            }
+            return var;
+        }
+
+
+    //tutup modif
+    
     public static String USERHYBRIDWEB(){
         try (FileInputStream fis = new FileInputStream("setting/database.xml")) {
             prop.loadFromXML(fis);

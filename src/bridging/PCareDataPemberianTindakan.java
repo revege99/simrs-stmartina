@@ -646,6 +646,20 @@ private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 JOptionPane.showMessageDialog(rootPane,"Data billing sudah terverifikasi, data tidak boleh dihapus.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                 TCari.requestFocus();
             }else{
+                //tambahan modif
+                int jawab = JOptionPane.showConfirmDialog(
+                    this,
+                    "Apakah Anda yakin ingin menghapus data ini?",
+                    "Konfirmasi Hapus",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+                );
+                if(jawab != JOptionPane.YES_OPTION){
+                    return; // batal hapus
+                }
+                // tutup tambahan modif
+                
+                
                 Sequel.AutoComitFalse();
                 sukses=true;
                 ttljasasarana=Double.parseDouble(tbDokter.getValueAt(tbDokter.getSelectedRow(),9).toString());
@@ -799,6 +813,19 @@ private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 JOptionPane.showMessageDialog(rootPane,"Data billing sudah terverifikasi, data tidak boleh dihapus.\nSilahkan hubungi bagian kasir/keuangan ..!!");
                 TCari.requestFocus();
             }else{
+                
+                //tambahan modif
+                    int jawab = JOptionPane.showConfirmDialog(
+        this,
+        "Apakah Anda yakin ingin menghapus data ini?",
+        "Konfirmasi Hapus",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE
+    );
+    if(jawab != JOptionPane.YES_OPTION){
+        return; // batal hapus
+    }
+                // tutup tambahan modif
                 Sequel.AutoComitFalse();
                 sukses=true;
                 ttljasasarana=Double.parseDouble(tbDokter2.getValueAt(tbDokter2.getSelectedRow(),9).toString());

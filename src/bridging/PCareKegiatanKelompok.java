@@ -1069,18 +1069,49 @@ public final class PCareKegiatanKelompok extends javax.swing.JDialog {
 }//GEN-LAST:event_BtnBatalKeyPressed
 
     private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
-        if(tabMode.getRowCount()==0){
-            JOptionPane.showMessageDialog(null,"Maaf, data sudah habis...!!!!");
-            TCari.requestFocus();
-        }else{
-            if(tbJnsPerawatan.getSelectedRow()!= -1){
-                try {
-                    bodyWithDeleteRequest();
-                }catch (Exception ex) {
-                    System.out.println("Notifikasi Bridging : "+ex);                    
-                }
+//        if(tabMode.getRowCount()==0){
+//            JOptionPane.showMessageDialog(null,"Maaf, data sudah habis...!!!!");
+//            TCari.requestFocus();
+//        }else{
+//            if(tbJnsPerawatan.getSelectedRow()!= -1){
+//                try {
+//                    bodyWithDeleteRequest();
+//                }catch (Exception ex) {
+//                    System.out.println("Notifikasi Bridging : "+ex);                    
+//                }
+//            }
+//        }
+
+//modif
+if(tabMode.getRowCount()==0){
+    JOptionPane.showMessageDialog(null,"Maaf, data sudah habis...!!!!");
+    TCari.requestFocus();
+}else{
+    if(tbJnsPerawatan.getSelectedRow()!= -1){
+        int jawab = JOptionPane.showConfirmDialog(
+            this,
+            "Apakah Anda yakin ingin menghapus data ini?",
+            "Konfirmasi Hapus",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if(jawab == JOptionPane.YES_OPTION){
+            try {
+                bodyWithDeleteRequest(); // hapus data
+            } catch (Exception ex) {
+                System.out.println("Notifikasi Bridging : " + ex);
             }
+        } else {
+            // batal hapus
         }
+    } else {
+        JOptionPane.showMessageDialog(null,"Maaf, silahkan pilih data terlebih dahulu...!!!!");
+        TCari.requestFocus();
+    }
+}
+
+//tutup modif
 }//GEN-LAST:event_BtnHapusActionPerformed
 
     private void BtnHapusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnHapusKeyPressed

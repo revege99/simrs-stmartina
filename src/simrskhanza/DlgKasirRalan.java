@@ -11,6 +11,19 @@
  */
 
 package simrskhanza;
+
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import javax.swing.JOptionPane;
+
+
+
 import bridging.BPJSCekDataIndukKecelakaan;
 import bridging.BPJSCekSuplesiJasaRaharja;
 import rekammedis.RMRiwayatPerawatan;
@@ -51,6 +64,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -758,6 +775,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         MnPermintaanRanap = new javax.swing.JMenuItem();
         MnPermintaanInformasiObat = new javax.swing.JMenuItem();
         ppMasukPoli = new javax.swing.JMenuItem();
+        ppPasienTidakHadir = new javax.swing.JMenuItem();
         MnKamarInap = new javax.swing.JMenuItem();
         MnTindakanRalan = new javax.swing.JMenu();
         MnDataRalan = new javax.swing.JMenuItem();
@@ -2592,6 +2610,13 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         MnPermintaan.add(MnPermintaanInformasiObat);
 
         jPopupMenu1.add(MnPermintaan);
+        
+        //kode tambahan
+        String namaPasien = TNoRMCari.getText(); // atau dari komponen lain
+        String nomorAntrian = "12"; // misal kamu sudah punya logika nomor antrian
+        String namaDokter = TDokter.getText(); // misal dari textfield dokter
+        String spesialisDokter = CrDokter3.getText(); // bisa juga dari combo box / string statis
+        //tutup kode 
 
         ppMasukPoli.setBackground(new java.awt.Color(255, 255, 254));
         ppMasukPoli.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
@@ -2603,11 +2628,199 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         ppMasukPoli.setName("ppMasukPoli"); // NOI18N
         ppMasukPoli.setPreferredSize(new java.awt.Dimension(200, 26));
         ppMasukPoli.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                ppMasukPoliBtnPrintActionPerformed(evt);
+//            }
+//        });
+            
+            
+            //modif kode
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ppMasukPoliBtnPrintActionPerformed(evt);
+                    try {
+                        int row = tbKasirRalan.getSelectedRow();
+                        if (row == -1) {
+                            JOptionPane.showMessageDialog(null, "Silakan pilih pasien dari tabel.");
+                            return;
+                        }
+
+                        // --- Ambil data dari tabel ---
+                        String namaPasien = TPasienCari.getText();
+                        String nomorAntrian = TNoReg.getText();
+                        String namaDokter = tbKasirRalan.getValueAt(row, 1).toString();   // pastikan kolom dokter
+                        String spesialisDokter = tbKasirRalan.getValueAt(row, 4).toString(); // pastikan kolom poli
+                        String noRawat = tbKasirRalan.getValueAt(row, 11).toString(); // pastikan index sesuai
+                        
+                        
+                        String namaPoli = tbKasirRalan.getValueAt(row, 4).toString();
+                        String noReg = tbKasirRalan.getValueAt(row, 14).toString();
+                        String tanggal = tbKasirRalan.getValueAt(row, 12).toString();
+                        String kdPoli = ""; // default kosong
+
+                        if (namaPoli.equalsIgnoreCase("Poliklinik Umum")) {
+                            kdPoli = "001";
+                        } else if (namaPoli.equalsIgnoreCase("Poliklinik Gigi")) {
+                            kdPoli = "002";
+                        } else {
+                            kdPoli = "999"; // default kode jika tidak dikenal
+                        }
+
+                        
+                        String kdDokter = tbKasirRalan.getValueAt(row, 0).toString();
+                        
+                        
+                        Sequel.queryu("DELETE FROM antripoli WHERE kd_dokter='" + kdDokter + "' AND kd_poli='" + kdPoli + "'");
+                        Sequel.queryu("INSERT INTO antripoli VALUES('" + kdDokter + "','" + kdPoli + "','1','" + noRawat + "','" + noReg + "','" + tanggal + "')");
+
+                        // =======================
+                        URL obj = new URL("http://" + koneksiDB.HOSTCALL() + "/" + koneksiDB.FOLDERCALL() + "/simpan.php");
+                        
+                        System.out.println(obj.toString());
+                        // atau cukup:
+                        System.out.println(obj);
+                        HttpURLConnection conLocal = (HttpURLConnection) obj.openConnection();
+                        conLocal.setRequestMethod("POST");
+                        conLocal.setDoOutput(true);
+                        conLocal.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                        String localParams =
+                            "nama=" + URLEncoder.encode(namaPasien, "UTF-8") +
+                            "&nomor=" + URLEncoder.encode(nomorAntrian, "UTF-8") +
+                            "&dokter=" + URLEncoder.encode(namaDokter, "UTF-8") +
+                            "&spesialis=" + URLEncoder.encode(spesialisDokter, "UTF-8");
+
+                        try (DataOutputStream wr = new DataOutputStream(conLocal.getOutputStream())) {
+                            wr.writeBytes(localParams);
+                            wr.flush();
+                        }
+
+                        int responseCodeLocal = conLocal.getResponseCode();
+                        System.out.println("Local Response Code: " + responseCodeLocal);
+
+
+                        URL urlBPJS = new URL("http://" + koneksiDB.HOSTCALL() + "/webkhanza/?page=function_panggil_antrean");
+                        HttpURLConnection conBPJS = (HttpURLConnection) urlBPJS.openConnection();
+                        conBPJS.setRequestMethod("POST");
+                        conBPJS.setDoOutput(true);
+                        conBPJS.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                        String bpjsParams = "no_rawat=" + URLEncoder.encode(noRawat, "UTF-8");
+
+
+                        try (DataOutputStream wr2 = new DataOutputStream(conBPJS.getOutputStream())) {
+                            wr2.writeBytes(bpjsParams);
+                            wr2.flush();
+                        }
+
+                        int responseCodeBPJS = conBPJS.getResponseCode();
+                        StringBuilder responseBPJS = new StringBuilder();
+                        try (BufferedReader in = new BufferedReader(new InputStreamReader(conBPJS.getInputStream()))) {
+                            String inputLine;
+                            while ((inputLine = in.readLine()) != null) {
+                                responseBPJS.append(inputLine);
+                            }
+                        }
+
+                        // =======================
+                        // ✅ Hasil ke User
+                        // =======================
+                        String message = "";
+                        message += (responseCodeLocal == 200)
+                            ? "✔️ Data antrian berhasil dikirim ke sistem lokal.\n"
+                            : "❌ Gagal kirim ke sistem lokal. Kode: " + responseCodeLocal + "\n";
+                        message += "\n";
+                        message += (responseCodeBPJS == 200)
+                            ? "✔️ Data berhasil dikirim ke BPJS!\nRespon: " + responseBPJS
+                            : "❌ Gagal kirim ke BPJS. Kode: " + responseCodeBPJS + "\nRespon: " + responseBPJS;
+
+                        JOptionPane.showMessageDialog(null, message);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                    }
+                }
+               });
+            
+          
+            //tutup modif kode
+        jPopupMenu1.add(ppMasukPoli);
+        
+        
+        ppPasienTidakHadir.setBackground(new java.awt.Color(255, 255, 254));
+        ppPasienTidakHadir.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        ppPasienTidakHadir.setForeground(new java.awt.Color(50, 50, 50));
+        ppPasienTidakHadir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        ppPasienTidakHadir.setText("Pasien Tidak Hadir");
+        ppPasienTidakHadir.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        ppPasienTidakHadir.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        ppPasienTidakHadir.setName("ppPasienTidakHadir"); // NOI18N
+        ppPasienTidakHadir.setPreferredSize(new java.awt.Dimension(200, 26));
+        ppPasienTidakHadir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    int row = tbKasirRalan.getSelectedRow();
+                    if (row == -1) {
+                        JOptionPane.showMessageDialog(null, "Silakan pilih pasien dari tabel.");
+                        return;
+                    }
+                    String noRawat = tbKasirRalan.getValueAt(row, 11).toString();
+//                    URL url = new URL("http://192.168.100.161/webkhanza/?page=function_pasien_tidakhadir");
+//                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//
+//                    con.setRequestMethod("POST");
+//                    con.setDoOutput(true);
+//                    con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+//
+//                    String urlParameters = "no_rawat=" + URLEncoder.encode(noRawat, "UTF-8");
+
+                        URL url = new URL("http://" + koneksiDB.HOSTCALL() + "/webkhanza/?page=function_pasien_tidakhadir");
+                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+                        con.setRequestMethod("POST");
+                        con.setDoOutput(true);
+                        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                        String urlParameters = "no_rawat=" + URLEncoder.encode(noRawat, "UTF-8");
+
+
+                    try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
+                        wr.writeBytes(urlParameters);
+                        wr.flush();
+                    }
+
+                    int responseCode = con.getResponseCode();
+
+                    StringBuilder response = new StringBuilder();
+                    try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                        String inputLine;
+                        while ((inputLine = in.readLine()) != null) {
+                            response.append(inputLine);
+                        }
+                    }
+
+                    System.out.println("Response Code: " + responseCode);
+                    System.out.println("Response Body: " + response.toString());
+
+                    if (responseCode == 200) {
+                        JOptionPane.showMessageDialog(null, 
+                            "Panggilan antrean terkirim ke BPJS!\n\nRespon:\n" + response.toString());
+                    } else {
+                        JOptionPane.showMessageDialog(null, 
+                            "Gagal kirim ke BPJS. Kode: " + responseCode + "\nRespon:\n" + response.toString());
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                }
             }
         });
-        jPopupMenu1.add(ppMasukPoli);
+     
+            //tutup modif kode
+        jPopupMenu1.add(ppPasienTidakHadir);
+        
+       
 
         MnKamarInap.setBackground(new java.awt.Color(255, 255, 254));
         MnKamarInap.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
@@ -3293,6 +3506,25 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         MnSuratSurat.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         MnSuratSurat.setName("MnSuratSurat"); // NOI18N
         MnSuratSurat.setPreferredSize(new java.awt.Dimension(240, 26));
+        
+        MnBuktiPelayananBPJS = new javax.swing.JMenuItem();
+        MnBuktiPelayananBPJS.setBackground(new java.awt.Color(255, 255, 254));
+        MnBuktiPelayananBPJS.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnBuktiPelayananBPJS.setForeground(new java.awt.Color(50, 50, 50));
+        MnBuktiPelayananBPJS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png")));
+        MnBuktiPelayananBPJS.setText("Bukti Pelayanan BPJS");
+        MnBuktiPelayananBPJS.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        MnBuktiPelayananBPJS.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        MnBuktiPelayananBPJS.setName("MnBuktiPelayananBPJS"); // NOI18N
+        MnBuktiPelayananBPJS.setPreferredSize(new java.awt.Dimension(200, 26));
+        MnBuktiPelayananBPJS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnBuktiPelayananBPJSActionPerformed(evt);
+            }
+        });
+        MnSuratSurat.add(MnBuktiPelayananBPJS);
+
+
 
         MnSuratKontrol.setBackground(new java.awt.Color(255, 255, 254));
         MnSuratKontrol.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
@@ -10557,6 +10789,23 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
             }
         }
     }//GEN-LAST:event_MnCetakBebasNarkobaActionPerformed
+    
+    
+    private void MnBuktiPelayananBPJSActionPerformed(java.awt.event.ActionEvent evt) {                                                     
+    if (tbKasirRalan.getSelectedRow() != -1) {
+        String no_rawat = tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 11).toString();
+        try {
+            String url = "http://192.168.100.161/klinik2/myproject/pdfbuktipelbpjs.php?no_rawat=" + no_rawat;
+            java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Gagal membuka link: " + e.getMessage());
+        }
+    } else {
+        JOptionPane.showMessageDialog(null, "Silakan pilih data pasien terlebih dahulu.");
+    }
+}
+
+    
 
     private void MnCetakSuratSakitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnCetakSuratSakitActionPerformed
         if(tabModekasir.getRowCount()==0){
@@ -15480,6 +15729,7 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
     private javax.swing.JMenuItem ppIKP;
     private javax.swing.JMenuItem ppIKP1;
     private javax.swing.JMenuItem ppMasukPoli;
+    javax.swing.JMenuItem ppPasienTidakHadir;
     private javax.swing.JMenuItem ppMonitoringAsuhanGizi;
     private javax.swing.JMenuItem ppPasienCorona;
     private javax.swing.JMenuItem ppPerawatanCorona;
@@ -15498,6 +15748,9 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
     private javax.swing.JMenuItem ppTampilkanSeleksi;
     private widget.Table tbKasirRalan;
     private widget.Table tbKasirRalan2;
+    
+    private javax.swing.JMenuItem MnBuktiPelayananBPJS;
+
     // End of variables declaration//GEN-END:variables
     private javax.swing.JMenuItem MnPenilaianPreInduksi,MnHasilPemeriksaanUSG,MnHasilPemeriksaanUSGUrologi,MnHasilPemeriksaanUSGGynecologi,MnHasilPemeriksaanEKG,MnSudahTerbitSEP,MnPenatalaksanaanTerapiOkupasi,MnHasilPemeriksaanUSGNeonatus,
                                   MnHasilEndoskopiFaringLaring,MnHasilEndoskopiHidung,MnHasilEndoskopiTelinga,MnPenilaianPasienImunitasRendah,MnCatatanKeseimbanganCairan,MnCatatanObservasiCHBP,MnCatatanObservasiInduksiPersalinan,

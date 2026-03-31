@@ -72,218 +72,21 @@ public class frmUtama extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        TNoRw = new widget.TextBox();
-        TNoRM = new widget.TextBox();
-        KdPoliTujuan = new widget.TextBox();
-        KdTenagaMedis = new widget.TextBox();
         JenisKunjungan = new widget.ComboBox();
         Perawatan = new widget.ComboBox();
-        TanggalDaftar = new widget.Tanggal();
-        TanggalKunjungan = new widget.Tanggal();
-        TanggalPulang = new widget.Tanggal();
-        KdStatusPulang = new widget.TextBox();
-        NmStatusPulang = new widget.TextBox();
-        NmPoliTujuan = new widget.TextBox();
-        NmTenagaMedis = new widget.TextBox();
-        KdDiagnosa1 = new widget.TextBox();
-        NmDiagnosa1 = new widget.TextBox();
-        KdDiagnosa2 = new widget.TextBox();
-        NmDiagnosa2 = new widget.TextBox();
-        NmDiagnosa3 = new widget.TextBox();
-        KdDiagnosa3 = new widget.TextBox();
-        TinggiBadan = new widget.TextBox();
-        Keluhan = new widget.TextBox();
-        Sistole = new widget.TextBox();
-        BeratBadan = new widget.TextBox();
-        Diastole = new widget.TextBox();
-        Respiratory = new widget.TextBox();
-        Heartrate = new widget.TextBox();
-        KdSadar = new widget.TextBox();
-        NmSadar = new widget.TextBox();
-        NoKartu = new widget.TextBox();
-        TPasien = new widget.TextBox();
         ChkRujukLanjut = new widget.CekBox();
-        TerapiObat = new widget.TextBox();
-        LingkarPerut = new widget.TextBox();
-        TerapiNonObat = new widget.TextBox();
-        BMHP = new widget.TextBox();
-        KdAlergiMakanan = new widget.TextBox();
-        NmAlergiMakanan = new widget.TextBox();
-        KdAlergiUdara = new widget.TextBox();
-        NmAlergiUdara = new widget.TextBox();
-        KdPrognosa = new widget.TextBox();
-        NmPrognosa = new widget.TextBox();
-        NmAlergiObat = new widget.TextBox();
-        KdAlergiObat = new widget.TextBox();
-        TSuhu = new widget.TextBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         TeksArea = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
-
-        TNoRw.setBackground(new java.awt.Color(245, 250, 240));
-        TNoRw.setHighlighter(null);
-
-        TNoRM.setHighlighter(null);
-
-        KdPoliTujuan.setEditable(false);
-        KdPoliTujuan.setBackground(new java.awt.Color(245, 250, 240));
-        KdPoliTujuan.setHighlighter(null);
-
-        KdTenagaMedis.setEditable(false);
-        KdTenagaMedis.setBackground(new java.awt.Color(245, 250, 240));
-        KdTenagaMedis.setHighlighter(null);
 
         JenisKunjungan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kunjungan Sakit", "Kunjungan Sehat" }));
 
         Perawatan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10 Rawat Jalan", "20 Rawat Inap", "50 Promotif Preventif" }));
 
-        TanggalDaftar.setForeground(new java.awt.Color(50, 70, 50));
-        TanggalDaftar.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-07-2024" }));
-        TanggalDaftar.setDisplayFormat("dd-MM-yyyy");
-        TanggalDaftar.setOpaque(false);
-        TanggalDaftar.setPreferredSize(new java.awt.Dimension(95, 23));
-
-        TanggalKunjungan.setForeground(new java.awt.Color(50, 70, 50));
-        TanggalKunjungan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-07-2024" }));
-        TanggalKunjungan.setDisplayFormat("dd-MM-yyyy");
-        TanggalKunjungan.setEnabled(false);
-        TanggalKunjungan.setOpaque(false);
-        TanggalKunjungan.setPreferredSize(new java.awt.Dimension(95, 23));
-
-        TanggalPulang.setForeground(new java.awt.Color(50, 70, 50));
-        TanggalPulang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-07-2024" }));
-        TanggalPulang.setDisplayFormat("dd-MM-yyyy");
-        TanggalPulang.setEnabled(false);
-        TanggalPulang.setOpaque(false);
-        TanggalPulang.setPreferredSize(new java.awt.Dimension(95, 23));
-
-        KdStatusPulang.setEditable(false);
-        KdStatusPulang.setBackground(new java.awt.Color(245, 250, 240));
-        KdStatusPulang.setHighlighter(null);
-
-        NmStatusPulang.setEditable(false);
-        NmStatusPulang.setBackground(new java.awt.Color(245, 250, 240));
-        NmStatusPulang.setHighlighter(null);
-
-        NmPoliTujuan.setEditable(false);
-        NmPoliTujuan.setBackground(new java.awt.Color(245, 250, 240));
-        NmPoliTujuan.setHighlighter(null);
-
-        NmTenagaMedis.setEditable(false);
-        NmTenagaMedis.setBackground(new java.awt.Color(245, 250, 240));
-        NmTenagaMedis.setHighlighter(null);
-
-        KdDiagnosa1.setEditable(false);
-        KdDiagnosa1.setBackground(new java.awt.Color(245, 250, 240));
-        KdDiagnosa1.setHighlighter(null);
-
-        NmDiagnosa1.setEditable(false);
-        NmDiagnosa1.setBackground(new java.awt.Color(245, 250, 240));
-        NmDiagnosa1.setHighlighter(null);
-
-        KdDiagnosa2.setEditable(false);
-        KdDiagnosa2.setBackground(new java.awt.Color(245, 250, 240));
-        KdDiagnosa2.setHighlighter(null);
-
-        NmDiagnosa2.setEditable(false);
-        NmDiagnosa2.setBackground(new java.awt.Color(245, 250, 240));
-        NmDiagnosa2.setHighlighter(null);
-
-        NmDiagnosa3.setEditable(false);
-        NmDiagnosa3.setBackground(new java.awt.Color(245, 250, 240));
-        NmDiagnosa3.setHighlighter(null);
-
-        KdDiagnosa3.setEditable(false);
-        KdDiagnosa3.setBackground(new java.awt.Color(245, 250, 240));
-        KdDiagnosa3.setHighlighter(null);
-
-        TinggiBadan.setText("0");
-        TinggiBadan.setHighlighter(null);
-
-        Keluhan.setHighlighter(null);
-
-        Sistole.setText("0");
-        Sistole.setHighlighter(null);
-
-        BeratBadan.setText("0");
-        BeratBadan.setHighlighter(null);
-
-        Diastole.setText("0");
-        Diastole.setHighlighter(null);
-
-        Respiratory.setText("0");
-        Respiratory.setHighlighter(null);
-
-        Heartrate.setText("0");
-        Heartrate.setHighlighter(null);
-
-        KdSadar.setEditable(false);
-        KdSadar.setBackground(new java.awt.Color(245, 250, 240));
-        KdSadar.setHighlighter(null);
-
-        NmSadar.setEditable(false);
-        NmSadar.setBackground(new java.awt.Color(245, 250, 240));
-        NmSadar.setHighlighter(null);
-
-        NoKartu.setEditable(false);
-        NoKartu.setBackground(new java.awt.Color(245, 250, 240));
-        NoKartu.setHighlighter(null);
-
-        TPasien.setEditable(false);
-        TPasien.setBackground(new java.awt.Color(245, 250, 240));
-        TPasien.setHighlighter(null);
-
         ChkRujukLanjut.setText("Rujuk Lanjut :");
         ChkRujukLanjut.setEnabled(false);
         ChkRujukLanjut.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         ChkRujukLanjut.setOpaque(false);
-
-        TerapiObat.setEnabled(false);
-        TerapiObat.setHighlighter(null);
-
-        LingkarPerut.setEditable(false);
-        LingkarPerut.setBackground(new java.awt.Color(245, 250, 240));
-        LingkarPerut.setHighlighter(null);
-
-        TerapiNonObat.setEnabled(false);
-        TerapiNonObat.setHighlighter(null);
-
-        BMHP.setEnabled(false);
-        BMHP.setHighlighter(null);
-
-        KdAlergiMakanan.setEditable(false);
-        KdAlergiMakanan.setBackground(new java.awt.Color(245, 250, 240));
-        KdAlergiMakanan.setHighlighter(null);
-
-        NmAlergiMakanan.setEditable(false);
-        NmAlergiMakanan.setBackground(new java.awt.Color(245, 250, 240));
-        NmAlergiMakanan.setHighlighter(null);
-
-        KdAlergiUdara.setEditable(false);
-        KdAlergiUdara.setBackground(new java.awt.Color(245, 250, 240));
-        KdAlergiUdara.setHighlighter(null);
-
-        NmAlergiUdara.setEditable(false);
-        NmAlergiUdara.setBackground(new java.awt.Color(245, 250, 240));
-        NmAlergiUdara.setHighlighter(null);
-
-        KdPrognosa.setEditable(false);
-        KdPrognosa.setBackground(new java.awt.Color(245, 250, 240));
-        KdPrognosa.setHighlighter(null);
-
-        NmPrognosa.setEditable(false);
-        NmPrognosa.setBackground(new java.awt.Color(245, 250, 240));
-        NmPrognosa.setHighlighter(null);
-
-        NmAlergiObat.setEditable(false);
-        NmAlergiObat.setBackground(new java.awt.Color(245, 250, 240));
-        NmAlergiObat.setHighlighter(null);
-
-        KdAlergiObat.setEditable(false);
-        KdAlergiObat.setBackground(new java.awt.Color(245, 250, 240));
-        KdAlergiObat.setHighlighter(null);
-
-        TSuhu.setFocusTraversalPolicyProvider(true);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SIMKES Khanza Service PCare");
@@ -347,51 +150,10 @@ public class frmUtama extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private widget.TextBox BMHP;
-    private widget.TextBox BeratBadan;
     private widget.CekBox ChkRujukLanjut;
-    private widget.TextBox Diastole;
-    private widget.TextBox Heartrate;
     private widget.ComboBox JenisKunjungan;
-    private widget.TextBox KdAlergiMakanan;
-    private widget.TextBox KdAlergiObat;
-    private widget.TextBox KdAlergiUdara;
-    private widget.TextBox KdDiagnosa1;
-    private widget.TextBox KdDiagnosa2;
-    private widget.TextBox KdDiagnosa3;
-    private widget.TextBox KdPoliTujuan;
-    private widget.TextBox KdPrognosa;
-    private widget.TextBox KdSadar;
-    private widget.TextBox KdStatusPulang;
-    private widget.TextBox KdTenagaMedis;
-    private widget.TextBox Keluhan;
-    private widget.TextBox LingkarPerut;
-    private widget.TextBox NmAlergiMakanan;
-    private widget.TextBox NmAlergiObat;
-    private widget.TextBox NmAlergiUdara;
-    private widget.TextBox NmDiagnosa1;
-    private widget.TextBox NmDiagnosa2;
-    private widget.TextBox NmDiagnosa3;
-    private widget.TextBox NmPoliTujuan;
-    private widget.TextBox NmPrognosa;
-    private widget.TextBox NmSadar;
-    private widget.TextBox NmStatusPulang;
-    private widget.TextBox NmTenagaMedis;
-    private widget.TextBox NoKartu;
     private widget.ComboBox Perawatan;
-    private widget.TextBox Respiratory;
-    private widget.TextBox Sistole;
-    private widget.TextBox TNoRM;
-    private widget.TextBox TNoRw;
-    private widget.TextBox TPasien;
-    private widget.TextBox TSuhu;
-    private widget.Tanggal TanggalDaftar;
-    private widget.Tanggal TanggalKunjungan;
-    private widget.Tanggal TanggalPulang;
     private javax.swing.JTextArea TeksArea;
-    private widget.TextBox TerapiNonObat;
-    private widget.TextBox TerapiObat;
-    private widget.TextBox TinggiBadan;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables

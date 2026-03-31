@@ -4178,27 +4178,86 @@ private void JeniskelasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     
     private void simpanObatPCare(String noKunjungan,String racikan,String kdObat,String signa1,String signa2,String jmlObat,String jmlPermintaan,String nmObatNonDPHO,String no_rawat,String tgl_perawatan,String jam,String kode_brng,String no_batch,String no_faktur){
         try {
+            
+            // Konversi jmlObat dan jmlPermintaan ke bilangan bulat jika desimal
+            try {
+                jmlObat = String.valueOf((int) Double.parseDouble(jmlObat));
+                jmlPermintaan = String.valueOf((int) Double.parseDouble(jmlPermintaan));
+            } catch (Exception e) {
+                System.out.println("Gagal konversi jumlah: " + e.getMessage());
+            }
+
+            
             headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+//            headers.setContentType(MediaType.APPLICATION_JSON);
             headers.add("X-cons-id",koneksiDB.CONSIDAPIPCARE());
             utc=String.valueOf(api.GetUTCdatetimeAsString());
             headers.add("X-timestamp",utc);            
             headers.add("X-signature",api.getHmac());
             headers.add("X-authorization","Basic "+Base64.encodeBase64String(otorisasi.getBytes()));
             headers.add("user_key",koneksiDB.USERKEYAPIPCARE());
-            requestJson ="{" +
-                "\"kdObatSK\": 0," +
-                "\"noKunjungan\": \""+noKunjungan+"\"," +
-                "\"racikan\": "+racikan+"," +
-                "\"kdRacikan\": null," +
-                "\"obatDPHO\": true," +
-                "\"kdObat\": \""+kdObat+"\"," +
-                "\"signa1\": "+signa1+"," +
-                "\"signa2\": "+signa2+"," +
-                "\"jmlObat\": "+jmlObat+"," +
-                "\"jmlPermintaan\": "+jmlPermintaan+"," +
-                "\"nmObatNonDPHO\": \""+nmObatNonDPHO+"\"" +
-             "}";
+            
+
+//            requestJson ="{" +
+//                "\"kdObatSK\": 0," +
+//                "\"noKunjungan\": \""+noKunjungan+"\"," +
+//                "\"racikan\": "+racikan+"," +
+//                "\"kdRacikan\": null," +
+//                "\"obatDPHO\": true," +
+//                "\"kdObat\": \""+kdObat+"\"," +
+//                "\"signa1\": "+signa1+"," +
+//                "\"signa2\": "+signa2+"," +
+//                "\"jmlObat\": "+jmlObat+"," +
+//                "\"jmlPermintaan\": "+jmlPermintaan+"," +
+//                "\"nmObatNonDPHO\": \""+nmObatNonDPHO+"\"" +
+//             "}";
+
+//buka modif
+// default kdRacikan null
+String kdRacikanValue = "null";
+
+if ("true".equals(racikan) && tbObatRacikan.getSelectedRow() != -1) {
+    String namaRacikan = tbObatRacikan.getValueAt(tbObatRacikan.getSelectedRow(), 3).toString(); 
+
+    switch (namaRacikan) {
+        case "Puyer":
+            kdRacikanValue = "\"R.01\"";
+            break;
+        case "Sirup":
+            kdRacikanValue = "\"R.02\"";
+            break;
+        case "Salep":
+            kdRacikanValue = "\"R.03\"";
+            break;
+        case "KAPSUL":
+            kdRacikanValue = "\"R.04\"";
+            break;
+        case "INJEKSI":
+            kdRacikanValue = "\"R.06\"";
+            break;
+        default:
+            kdRacikanValue = "null"; // kalau belum ada mapping
+            break;
+    }
+}
+
+requestJson = "{" +
+    "\"kdObatSK\": 0," +
+    "\"noKunjungan\": \""+noKunjungan+"\"," +
+    "\"racikan\": "+racikan+"," +
+    "\"kdRacikan\": "+kdRacikanValue+"," +
+    "\"obatDPHO\": true," +
+    "\"kdObat\": \""+kdObat+"\"," +
+    "\"signa1\": "+signa1+"," +
+    "\"signa2\": "+signa2+"," +
+    "\"jmlObat\": "+jmlObat+"," +
+    "\"jmlPermintaan\": "+jmlPermintaan+"," +
+    "\"nmObatNonDPHO\": \""+nmObatNonDPHO+"\"" +
+"}";
+
+
+
+//tutup modif
             System.out.println(requestJson);
             requestEntity = new HttpEntity(requestJson,headers);
             requestJson=api.getRest().exchange(URL+"/obat/kunjungan", HttpMethod.POST, requestEntity, String.class).getBody();
@@ -4207,20 +4266,53 @@ private void JeniskelasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             nameNode = root.path("metaData");
             System.out.println("code : "+nameNode.path("code").asText());
             System.out.println("message : "+nameNode.path("message").asText()); 
-            if(nameNode.path("code").asText().equals("201")){
-                response = mapper.readTree(api.Decrypt(root.path("response").asText(),utc));
-                kdObatSK="";
-                if(response.isArray()){
-                    for(JsonNode list:response){
-                        if(list.path("field").asText().equals("kdObatSK")){
-                            kdObatSK=list.path("message").asText();
+            
+            
+            //kode modif
+            JsonNode responseNode = root.path("response"); // root dari mapper.readTree(...)
+            String kdObatSK = "";
+            
+          
+            if (nameNode.path("code").asText().equals("201")) {
+                // Ambil kdObatSK dari response
+                if (responseNode.isArray()) {
+                    for (JsonNode item : responseNode) {
+                        if (item.path("field").asText().equals("kdObatSK")) {
+                            kdObatSK = item.path("message").asText();
+                            break;
                         }
                     }
                 }
-                Sequel.menyimpan2("pcare_obat_diberikan","?,?,?,?,?,?,?,?",8,new String[]{
-                    no_rawat,noKunjungan,kdObatSK,tgl_perawatan,jam,kode_brng,no_batch,no_faktur
+
+                // Cetak kdObatSK setelah terisi
+                System.out.println("kdObatSK: " + kdObatSK);
+
+                // Simpan ke tabel pcare_obat_diberikan
+                Sequel.menyimpan2("pcare_obat_diberikan", "?,?,?,?,?,?,?,?", 8, new String[]{
+                    no_rawat, noKunjungan, kdObatSK, tgl_perawatan, jam, kode_brng, no_batch, no_faktur
                 });
             }
+            
+            //kode modif tutup
+
+            
+//            if(nameNode.path("code").asText().equals("201")){  
+//                response = mapper.readTree(api.Decrypt(root.path("response").asText(),utc));
+//                kdObatSK="";
+//                if(response.isArray()){
+//                    for(JsonNode list:response){
+//                        if(list.path("field").asText().equals("kdObatSK")){
+//                            kdObatSK=list.path("message").asText();
+//                        }
+//                    }
+//                }
+//
+//                    System.out.println("kdObatSK: " + kdObatSK);
+//                Sequel.menyimpan2("pcare_obat_diberikan","?,?,?,?,?,?,?,?",8,new String[]{
+//                    no_rawat,noKunjungan,kdObatSK,tgl_perawatan,jam,kode_brng,no_batch,no_faktur
+//                });
+//            }
+            
         }catch (Exception ex) {
             System.out.println("Notifikasi Bridging : "+ex);
             if(ex.toString().contains("UnknownHostException")){

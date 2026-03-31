@@ -1547,56 +1547,167 @@ private void ppPetugasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         nokunjungan=nokunjung;
     }
     
-    private void simpanTindakanPCare(String noKunjungan,String kdTindakan,String no_rawat,String tgl_perawatan,String jam,String kd_jenis_prw,String material,String bhp,String tarif_tindakandr,String tarif_tindakanpr,String kso,String menejemen,String biaya_rawat){
-        try {
-            headers = new HttpHeaders();
-            headers.setContentType(MediaType.TEXT_PLAIN);
-            headers.add("X-cons-id",koneksiDB.CONSIDAPIPCARE());
-            utc=String.valueOf(api.GetUTCdatetimeAsString());
-            headers.add("X-timestamp",utc);            
-            headers.add("X-signature",api.getHmac());
-            headers.add("X-authorization","Basic "+Base64.encodeBase64String(otorisasi.getBytes()));
-            headers.add("user_key",koneksiDB.USERKEYAPIPCARE());
-            requestJson ="{" +
-                "\"kdTindakanSK\": 0," +
-                "\"noKunjungan\": \""+noKunjungan+"\"," +
-                "\"kdTindakan\": \""+kdTindakan+"\"," +
-                "\"biaya\": 0," +
-                "\"keterangan\": null," +
-                "\"hasil\": 0" +
-            "}";
-            System.out.println(requestJson);
-            requestEntity = new HttpEntity(requestJson,headers);
-            requestJson=api.getRest().exchange(URL+"/tindakan", HttpMethod.POST, requestEntity, String.class).getBody();
-            System.out.println(requestJson);
-            root = mapper.readTree(requestJson);
-            nameNode = root.path("metaData");
-            System.out.println("code : "+nameNode.path("code").asText());
-            System.out.println("message : "+nameNode.path("message").asText()); 
-            if(nameNode.path("code").asText().equals("201")){
-                response = mapper.readTree(api.Decrypt(root.path("response").asText(),utc));
-                Sequel.menyimpan2("pcare_tindakan_ralan_diberikan","?,?,?,?,?,?,?,?,?,?,?,?,?",13,new String[]{
-                    no_rawat, noKunjungan, response.path("message").asText(), tgl_perawatan, jam, kd_jenis_prw,
-                    material, bhp, tarif_tindakandr, tarif_tindakanpr, kso, menejemen, biaya_rawat
-                });
+//    private void simpanTindakanPCare(String noKunjungan,String kdTindakan,String no_rawat,String tgl_perawatan,String jam,String kd_jenis_prw,String material,String bhp,String tarif_tindakandr,String tarif_tindakanpr,String kso,String menejemen,String biaya_rawat){
+//        try {
+//            try {
+//                kso = String.valueOf((int) Double.parseDouble(kso));
+//                
+//            } catch (Exception e) {
+//                System.out.println("Gagal konversi jumlah: " + e.getMessage());
+//            }
+//            headers = new HttpHeaders();
+////            headers.setContentType(MediaType.TEXT_PLAIN);
+//            headers.add("X-cons-id",koneksiDB.CONSIDAPIPCARE());
+//            utc=String.valueOf(api.GetUTCdatetimeAsString());
+//            headers.add("X-timestamp",utc);            
+//            headers.add("X-signature",api.getHmac());
+//            headers.add("X-authorization","Basic "+Base64.encodeBase64String(otorisasi.getBytes()));
+//            headers.add("user_key",koneksiDB.USERKEYAPIPCARE());
+//            requestJson ="{" +
+//                "\"kdTindakanSK\": 0," +
+//                "\"noKunjungan\": \""+noKunjungan+"\"," +
+//                "\"kdTindakan\": \""+kdTindakan+"\"," +
+//                    "\"biaya\": \""+kso+"\"," +
+////                "\"biaya\": 0," +
+//                "\"keterangan\": null," +
+//                "\"hasil\": 1" +
+//            "}";
+//            
+//            System.out.println("Headers: " + headers.toString());
+//            System.out.println(requestJson);
+//            requestEntity = new HttpEntity(requestJson,headers);
+//            requestJson=api.getRest().exchange(URL+"/tindakan", HttpMethod.POST, requestEntity, String.class).getBody();
+//            System.out.println(requestJson);
+//            root = mapper.readTree(requestJson);
+//            nameNode = root.path("metaData");
+//            System.out.println("code : "+nameNode.path("code").asText());
+//            System.out.println("message : "+nameNode.path("message").asText()); 
+//            
+//            if(nameNode.path("code").asText().equals("201")){
+//                response = mapper.readTree(api.Decrypt(root.path("response").asText(),utc));
+//                Sequel.menyimpan2("pcare_tindakan_ralan_diberikan","?,?,?,?,?,?,?,?,?,?,?,?,?",13,new String[]{
+//                    no_rawat, noKunjungan, response.path("message").asText(), tgl_perawatan, jam, kd_jenis_prw,
+//                    material, bhp, tarif_tindakandr, tarif_tindakanpr, kso, menejemen, biaya_rawat
+//                });
+//            }
+//        }catch (Exception ex) {
+//            System.out.println("Notifikasi Bridging : "+ex);
+//            if(ex.toString().contains("UnknownHostException")){
+//                JOptionPane.showMessageDialog(null,"Koneksi ke server PCare terputus...!");
+//            }else if(ex.toString().contains("500")){
+//                JOptionPane.showMessageDialog(null,"Gagal Proses, Periksa kembali data yang diinput. \nSemangat Kamu");
+//            }else if(ex.toString().contains("401")){
+//                JOptionPane.showMessageDialog(null,"Username/Password salah. Lupa password? Wani piro...!");
+//            }else if(ex.toString().contains("408")){
+//                JOptionPane.showMessageDialog(null,"Time out, hayati lelah baaaang...!");
+//            }else if(ex.toString().contains("424")){
+//                JOptionPane.showMessageDialog(null,"Ambil data masternya yang bener dong coy...!");
+//            }else if(ex.toString().contains("412")){
+//                JOptionPane.showMessageDialog(null,"Tidak sesuai kondisi. Aku, kamu end...!");
+//            }else if(ex.toString().contains("204")){
+//                JOptionPane.showMessageDialog(null,"Data tidak ditemukan...!");
+//            }
+//        } 
+//    }
+    
+    // modiff
+            private void simpanTindakanPCare(
+            String noKunjungan,String kdTindakan,String no_rawat,String tgl_perawatan,String jam,
+            String kd_jenis_prw,String material,String bhp,String tarif_tindakandr,String tarif_tindakanpr,
+            String kso,String menejemen,String biaya_rawat
+        ){
+            try {
+                // konversi kso
+                try {
+                    kso = String.valueOf((int) Double.parseDouble(kso));
+                } catch (Exception e) {
+                    System.out.println("Gagal konversi jumlah: " + e.getMessage());
+                }
+
+                // header
+                headers = new HttpHeaders();
+                headers.add("X-cons-id", koneksiDB.CONSIDAPIPCARE());
+                utc = String.valueOf(api.GetUTCdatetimeAsString());
+                headers.add("X-timestamp", utc);            
+                headers.add("X-signature", api.getHmac());
+                headers.add("X-authorization","Basic "+ Base64.encodeBase64String(otorisasi.getBytes()));
+                headers.add("user_key", koneksiDB.USERKEYAPIPCARE());
+
+                // request body
+                requestJson = "{"
+                    + "\"kdTindakanSK\":0,"
+                    + "\"noKunjungan\":\""+ noKunjungan +"\","
+                    + "\"kdTindakan\":\""+ kdTindakan +"\","
+                    + "\"biaya\":\""+ kso +"\","
+                    + "\"keterangan\":null,"
+                    + "\"hasil\":1"
+                    + "}";
+
+                System.out.println("Headers: " + headers);
+                System.out.println(requestJson);
+
+                requestEntity = new HttpEntity(requestJson, headers);
+                requestJson   = api.getRest()
+                                   .exchange(URL + "/tindakan", HttpMethod.POST, requestEntity, String.class)
+                                   .getBody();
+
+                System.out.println(requestJson);
+
+                root     = mapper.readTree(requestJson);
+                nameNode = root.path("metaData");
+                String code    = nameNode.path("code").asText();
+                String message = nameNode.path("message").asText();
+
+                System.out.println("code : " + code);
+                System.out.println("message : " + message);
+
+                if ("201".equals(code)) {
+                    // ======== SUKSES ========
+                    // decrypt response BPJS
+                    response = mapper.readTree(api.Decrypt(root.path("response").asText(), utc));
+
+                    // simpan ke database lokal
+                    Sequel.menyimpan2("pcare_tindakan_ralan_diberikan",
+                        "?,?,?,?,?,?,?,?,?,?,?,?,?",
+                        13,
+                        new String[]{
+                            no_rawat, noKunjungan,
+                            response.path("message").asText(),
+                            tgl_perawatan, jam, kd_jenis_prw,
+                            material, bhp, tarif_tindakandr,
+                            tarif_tindakanpr, kso, menejemen, biaya_rawat
+                        });
+
+                    JOptionPane.showMessageDialog(null,
+                        "Tindakan berhasil disimpan.",
+                        "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+                } else {
+                    // ======== GAGAL ========
+                    // default pesan = metaData.message
+                    String notif = message;
+
+                    // jika ada detail di array response[0].message
+                    JsonNode respNode = root.path("response");
+                    if (respNode.isArray() && respNode.size() > 0) {
+                        JsonNode first = respNode.get(0);
+                        if (first.has("message")) {
+                            notif = first.path("message").asText();
+                        }
+                    }
+
+                    JOptionPane.showMessageDialog(null,
+                        "BPJS PCare Error (" + code + "): " + notif,
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+            } catch (Exception ex) {
+                System.out.println("Notifikasi Bridging : " + ex);
+                JOptionPane.showMessageDialog(null,
+                    "Terjadi kesalahan: " + ex.getMessage(),
+                    "Exception", JOptionPane.ERROR_MESSAGE);
             }
-        }catch (Exception ex) {
-            System.out.println("Notifikasi Bridging : "+ex);
-            if(ex.toString().contains("UnknownHostException")){
-                JOptionPane.showMessageDialog(null,"Koneksi ke server PCare terputus...!");
-            }else if(ex.toString().contains("500")){
-                JOptionPane.showMessageDialog(null,"Server PCare baru ngambek broooh...!");
-            }else if(ex.toString().contains("401")){
-                JOptionPane.showMessageDialog(null,"Username/Password salah. Lupa password? Wani piro...!");
-            }else if(ex.toString().contains("408")){
-                JOptionPane.showMessageDialog(null,"Time out, hayati lelah baaaang...!");
-            }else if(ex.toString().contains("424")){
-                JOptionPane.showMessageDialog(null,"Ambil data masternya yang bener dong coy...!");
-            }else if(ex.toString().contains("412")){
-                JOptionPane.showMessageDialog(null,"Tidak sesuai kondisi. Aku, kamu end...!");
-            }else if(ex.toString().contains("204")){
-                JOptionPane.showMessageDialog(null,"Data tidak ditemukan...!");
-            }
-        } 
-    }
+        }
+
+
 }

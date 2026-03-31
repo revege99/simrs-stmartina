@@ -3991,9 +3991,15 @@ public final class BPJSCekNIK2 extends javax.swing.JDialog {
         }       
         ChkRM.setSelected(true);
         emptTeks();
-        if(TNik.getText().trim().equals("")){
-            JOptionPane.showMessageDialog(null,"NIK masih kosong..!!");
-        }else{
+        if (TNik.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Silahkan Masukkan NIK ! Semangat Kamu yaa");
+        } else if (!TNik.getText().trim().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "NIK hanya boleh berisi angka! Semangat Kamu yaa");
+        } else if (TNik.getText().trim().length() < 16) {
+            JOptionPane.showMessageDialog(null, "NIK kurang dari 16 digit! Semangat Kamu yaa");
+        } else if (TNik.getText().trim().length() > 16) {
+            JOptionPane.showMessageDialog(null, "NIK lebih dari 16 digit! Semangat Kamu yaa");
+        } else {
             tampil(TNik.getText().trim());
         }
             

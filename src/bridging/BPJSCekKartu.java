@@ -3876,11 +3876,21 @@ public final class BPJSCekKartu extends javax.swing.JDialog {
         }    
         ChkRM.setSelected(true);
         emptTeks();
-        if(NoKartu.getText().trim().equals("")){
-            JOptionPane.showMessageDialog(null,"No.Kartu masih kosong...!!");
-        }else{
-            tampil(NoKartu.getText());
+        String noKartu = NoKartu.getText().trim();
+
+        if(noKartu.equals("")){
+            JOptionPane.showMessageDialog(null, "No. Kartu masih kosong...!! Semangat Kamu yaa !");
+        } else if(!noKartu.matches("\\d+")){
+            JOptionPane.showMessageDialog(null, "No. Kartu hanya boleh berisi angka saja! Semangat Kamu yaa !");
+        } else if(noKartu.length() < 13){
+            JOptionPane.showMessageDialog(null, "No. Kartu kurang dari 13 digit! Semangat Kamu yaa !");
+        } else if(noKartu.length() > 13){
+            JOptionPane.showMessageDialog(null, "No. Kartu lebih dari 13 digit! Semangat Kamu yaa !");
         }
+        else {
+            tampil(noKartu);
+}
+
         this.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_BtnCariActionPerformed
 
