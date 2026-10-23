@@ -120,6 +120,8 @@ public class DlgDokter extends javax.swing.JDialog {
         TAlumni.setDocument(new batasInput((byte)60).getKata(TAlumni));
         TTlp.setDocument(new batasInput((byte)13).getOnlyAngka(TTlp));
         Email.setDocument(new batasInput((byte)70).getKata(Email));
+        user_icare.setDocument(new batasInput((byte)50).getKata(user_icare));
+        password_icare.setDocument(new batasInput((byte)50).getKata(password_icare));
         TCari.setDocument(new batasInput((byte)100).getKata(TCari));
         if(koneksiDB.CARICEPAT().equals("aktif")){
             TCari.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
@@ -1126,6 +1128,10 @@ public class DlgDokter extends javax.swing.JDialog {
             Valid.textKosong(TNm,"nama dokter");
         }else if(TSpesialis.getText().trim().equals("")||KdSps.getText().trim().equals("")){
             Valid.textKosong(KdSps,"spesialis");
+        }else if(user_icare.getText().trim().equals("")){
+            Valid.textKosong(user_icare,"user icare dokter");
+        }else if(password_icare.getText().trim().equals("")){
+            Valid.textKosong(password_icare,"password icare dokter");
         }else{
             try { 
                 koneksi.setAutoCommit(false);
@@ -1139,7 +1145,7 @@ public class DlgDokter extends javax.swing.JDialog {
                     "',jk='"+CmbJk.getSelectedItem().toString().replaceAll("LAKI-LAKI","L").replaceAll("PEREMPUAN","P").trim()+"',tmp_lahir='"+TTmp.getText()+
                     "',tgl_lahir='"+Valid.SetTgl(DTPLahir.getSelectedItem()+"")+"',gol_drh='"+CMbGd.getSelectedItem()+"',agama='"+cmbAgama.getSelectedItem()+
                     "',almt_tgl='"+TAlmt.getText()+"',no_telp='"+TTlp.getText()+"',email='"+Email.getText()+"',stts_nikah='"+CmbStts.getSelectedItem()+"'"+
-                    ",kd_sps='"+KdSps.getText()+"',alumni='"+TAlumni.getText()+"',no_ijn_praktek='"+TNoi.getText()+"'"
+                    ",kd_sps='"+KdSps.getText()+"',alumni='"+TAlumni.getText()+"',no_ijn_praktek='"+TNoi.getText()+"',user_key='"+user_icare.getText()+"',pass_icare='"+password_icare.getText()+"'"
                 );
                 koneksi.setAutoCommit(true);
                 if(tabMode.getRowCount()!=0){tampil();}

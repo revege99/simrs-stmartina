@@ -8253,64 +8253,101 @@ public final class PCareDataPendaftaran extends javax.swing.JDialog {
                     }
 
     // Bangun JSON
-    requestJson = "{"
-        + "\"noKunjungan\": null,"
-        + "\"noKartu\": \"" + NoKartu.getText() + "\","
-        + "\"tglDaftar\": \"" + TanggalKunjungan.getSelectedItem() + "\","
-        + "\"kdPoli\": \"" + KdPoliTujuan.getText() + "\","
-        + "\"keluhan\": \"" + (Keluhan.getText().equals("") ? "Tidak Ada" : Keluhan.getText()) + "\","
-        + "\"kdSadar\": \"" + KdSadar.getText() + "\","
-        + "\"sistole\": " + Sistole.getText() + ","
-        + "\"diastole\": " + Diastole.getText() + ","
-        + "\"beratBadan\": " + BeratBadan.getText() + ","
-        + "\"tinggiBadan\": " + TinggiBadan.getText() + ","
-        + "\"respRate\": " + Respiratory.getText() + ","
-        + "\"heartRate\": " + Heartrate.getText() + ","
-        + "\"lingkarPerut\": " + LingkarPerut.getText() + ","
-   
-        + "\"kdStatusPulang\": \"" + statusPulang + "\","
-        + "\"tglPulang\": \"" + TanggalPulang.getSelectedItem() + "\","
-        + "\"kdDokter\": \"" + KdTenagaMedis.getText() + "\","
-        + "\"kdDiag1\": \"" + KdDiagnosa1.getText() + "\","
-        + "\"kdDiag2\": " + diagnosa2 + ","
-        + "\"kdDiag3\": " + diagnosa3 + ","
-        + "\"kdPoliRujukInternal\": null,"
-        + "\"rujukLanjut\": null,"
-        + "\"kdTacc\": -1,"
-        + "\"alasanTacc\": null,"
-        + "\"anamnesa\": \"" + (Keluhan.getText().equals("") ? "Tidak Ada" : Keluhan.getText()) + "\","
-        + "\"alergiMakan\": \"" + KdAlergiMakanan.getText() + "\","
-        + "\"alergiUdara\": \"" + KdAlergiUdara.getText() + "\","
-        + "\"alergiObat\": \"" + KdAlergiObat.getText() + "\","
-        + "\"kdPrognosa\": \"" + KdPrognosa.getText() + "\","
-        + "\"terapiObat\": \"" + (TerapiObat.getText().equals("") ? "Tidak Ada" : TerapiObat.getText()) + "\","
-        + "\"terapiNonObat\": \"" + (TerapiNonObat.getText().equals("") ? "Tidak Ada" : TerapiNonObat.getText()) + "\","
-        + "\"bmhp\": \"" + (BMHP.getText().equals("") ? "Tidak Ada" : BMHP.getText()) + "\","
-        + "\"suhu\": \"" + TSuhu.getText() + "\""
-        + "}";
+                        requestJson = "{"
+                            + "\"noKunjungan\": null,"
+                            + "\"noKartu\": \"" + NoKartu.getText() + "\","
+                            + "\"tglDaftar\": \"" + TanggalKunjungan.getSelectedItem() + "\","
+                            + "\"kdPoli\": \"" + KdPoliTujuan.getText() + "\","
+                            + "\"keluhan\": \"" + (Keluhan.getText().equals("") ? "Tidak Ada" : Keluhan.getText()) + "\","
+                            + "\"kdSadar\": \"" + KdSadar.getText() + "\","
+                            + "\"sistole\": " + Sistole.getText() + ","
+                            + "\"diastole\": " + Diastole.getText() + ","
+                            + "\"beratBadan\": " + BeratBadan.getText() + ","
+                            + "\"tinggiBadan\": " + TinggiBadan.getText() + ","
+                            + "\"respRate\": " + Respiratory.getText() + ","
+                            + "\"heartRate\": " + Heartrate.getText() + ","
+                            + "\"lingkarPerut\": " + LingkarPerut.getText() + ","
 
-    System.out.println(requestJson); 
-    System.out.println("Content-Type: " + headers2.getContentType());
-    System.out.println("X-cons-id: " + headers2.getFirst("X-cons-id"));
-    System.out.println("X-timestamp: " + headers2.getFirst("X-timestamp"));
-    System.out.println("X-signature: " + headers2.getFirst("X-signature"));
-    System.out.println("X-authorization: " + headers2.getFirst("X-authorization"));
-    System.out.println("user_key: " + headers2.getFirst("user_key"));
+                            + "\"kdStatusPulang\": \"" + statusPulang + "\","
+                            + "\"tglPulang\": \"" + TanggalPulang.getSelectedItem() + "\","
+                            + "\"kdDokter\": \"" + KdTenagaMedis.getText() + "\","
+                            + "\"kdDiag1\": \"" + KdDiagnosa1.getText() + "\","
+                            + "\"kdDiag2\": " + diagnosa2 + ","
+                            + "\"kdDiag3\": " + diagnosa3 + ","
+                            + "\"kdPoliRujukInternal\": null,"
+                            + "\"rujukLanjut\": null,"
+                            + "\"kdTacc\": -1,"
+                            + "\"alasanTacc\": null,"
+                            + "\"anamnesa\": \"" + (Keluhan.getText().equals("") ? "Tidak Ada" : Keluhan.getText()) + "\","
+                            + "\"alergiMakan\": \"" + KdAlergiMakanan.getText() + "\","
+                            + "\"alergiUdara\": \"" + KdAlergiUdara.getText() + "\","
+                            + "\"alergiObat\": \"" + KdAlergiObat.getText() + "\","
+                            + "\"kdPrognosa\": \"" + KdPrognosa.getText() + "\","
+                            + "\"terapiObat\": \"" + (TerapiObat.getText().equals("") ? "Tidak Ada" : TerapiObat.getText()) + "\","
+                            + "\"terapiNonObat\": \"" + (TerapiNonObat.getText().equals("") ? "Tidak Ada" : TerapiNonObat.getText()) + "\","
+                            + "\"bmhp\": \"" + (BMHP.getText().equals("") ? "Tidak Ada" : BMHP.getText()) + "\","
+                            + "\"suhu\": \"" + TSuhu.getText() + "\""
+                            + "}";
+
+                        System.out.println(requestJson); 
+                        System.out.println("Content-Type: " + headers2.getContentType());
+                        System.out.println("X-cons-id: " + headers2.getFirst("X-cons-id"));
+                        System.out.println("X-timestamp: " + headers2.getFirst("X-timestamp"));
+                        System.out.println("X-signature: " + headers2.getFirst("X-signature"));
+                        System.out.println("X-authorization: " + headers2.getFirst("X-authorization"));
+                        System.out.println("user_key: " + headers2.getFirst("user_key"));
 
                         
                         System.out.println("\n=== REQUEST JSON START1 ===\n" 
-                   + requestJson 
-                   + "\n=== REQUEST JSON END ===\n");
+                        + requestJson 
+                        + "\n=== REQUEST JSON END start 1 ===\n");
 
                         requestEntity = new HttpEntity(requestJson,headers2);
-                        
-                        
-                        requestJson=api.getRest().exchange(koneksiDB.URLAPIPCARE()+"/kunjungan/V1", HttpMethod.POST, requestEntity, String.class).getBody();
-                        System.out.println(requestJson);
-                        root = mapper.readTree(requestJson);
-                        nameNode = root.path("metaData");
-                        System.out.println("code : "+nameNode.path("code").asText());
-                        System.out.println("message : "+nameNode.path("message").asText());
+ 
+//                        requestJson=api.getRest().exchange(koneksiDB.URLAPIPCARE()+"/kunjungan/V1", HttpMethod.POST, requestEntity, String.class).getBody();
+//                        System.out.println(requestJson);
+//                        root = mapper.readTree(requestJson);
+//                        nameNode = root.path("metaData");
+//                        System.out.println("code : "+nameNode.path("code").asText());
+//                        System.out.println("message : "+nameNode.path("message").asText());
+
+                        //modif
+                        try {
+                            requestEntity = new HttpEntity<>(requestJson, headers2);
+
+                            requestJson = api.getRest().exchange(
+                                koneksiDB.URLAPIPCARE() + "/kunjungan/V1", 
+                                HttpMethod.POST, 
+                                requestEntity, 
+                                String.class
+                            ).getBody();
+
+                            System.out.println("Respon Sukses: " + requestJson);
+
+                        } catch (org.springframework.web.client.HttpStatusCodeException e) {
+                            // Menangkap error HTTP (4xx / 5xx) dan mengambil body respon dari BPJS
+                            requestJson = e.getResponseBodyAsString();
+                            System.out.println("Respon Error dari BPJS: " + requestJson);
+
+                        } catch (Exception e) {
+                            // Menangkap error jaringan/sistem lainnya
+                            e.printStackTrace();
+                            requestJson = null;
+                        }
+
+                        // Proses parsing JSON metaData jika respon tidak null
+                        if (requestJson != null && !requestJson.isEmpty()) {
+                            try {
+                                root = mapper.readTree(requestJson);
+                                nameNode = root.path("metaData");
+
+                                System.out.println("code : " + nameNode.path("code").asText());
+                                System.out.println("message : " + nameNode.path("message").asText());
+                            } catch (Exception e) {
+                                System.out.println("Gagal parsing JSON respon: " + e.getMessage());
+                            }
+                        }
+                        //
                         if(nameNode.path("code").asText().equals("201")){
                             for(JsonNode list:mapper.readTree(api.Decrypt(root.path("response").asText(),utc))){
                                 response=list.path("message");
